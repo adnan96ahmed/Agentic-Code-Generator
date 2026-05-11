@@ -1,0 +1,10 @@
+Build a Car Inventory Manager as a React + TypeScript single-page application.
+
+The app must:
+1. Fetch a list of cars from a GraphQL API (GetCars query) and display them in a responsive grid of Material UI cards. Each card shows the car's make, model, year, and color.
+2. Show a responsive image on each card — use the mobile image URL on screens ≤640px, tablet URL on 641–1023px, and desktop URL on screens ≥1024px.
+3. Include a search bar that filters the displayed cars by model name (case-insensitive).
+4. Include sort controls to sort cars by year (ascending/descending) or by make (A-Z).
+5. Include an "Add Car" form with fields for make, model, year, and color. Submitting the form calls the AddCar GraphQL mutation and adds the new car to the list.
+6. Extract all GraphQL query/mutation logic and filter/sort state into a custom React hook called useCars.
+7. Include unit tests for the CarCard component and CarList component using MockedProvider.

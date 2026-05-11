@@ -10,7 +10,7 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "typecheck": "tsc --noEmit",
-    "agent": "tsx agent/index.ts"
+    "agent": "tsx agent/index.ts --spec agent/sample-spec.txt --output ./generated-app"
   },
   "dependencies": {
     "@apollo/client": "^3.12.0",
