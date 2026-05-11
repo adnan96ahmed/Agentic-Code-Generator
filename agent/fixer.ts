@@ -5,7 +5,7 @@ import { validate, type ValidationResult } from "./validator.ts";
 import { FIX_SYSTEM_PROMPT, buildFixUserPrompt } from "./prompts/fixPrompt.ts";
 import type { GeneratedFile } from "./generator.ts";
 
-const MAX_RETRIES = 2;
+const MAX_RETRIES = 3;
 
 /**
  * Strips markdown code fences if the LLM wraps its output in them.
@@ -56,10 +56,23 @@ export async function fix(
         continue;
       }
 
+      // For test files, also inject the component being tested as context
+      let componentContext = "";
+      const testMatch = file.path.match(/src\/__tests__\/(\w+)\.test\.tsx$/);
+      if (testMatch) {
+        const componentName = testMatch[1];
+        const componentPath = path.join(outputRoot, `src/components/${componentName}.tsx`);
+        try {
+          componentContext = `\n\nComponent being tested (src/components/${componentName}.tsx):\n${readFile(componentPath)}`;
+        } catch {
+          // component file not found — skip
+        }
+      }
+
       const raw = await chat(
         [
           { role: "system", content: FIX_SYSTEM_PROMPT },
-          { role: "user", content: buildFixUserPrompt(file.path, currentContent, current.errors) },
+          { role: "user", content: buildFixUserPrompt(file.path, currentContent, current.errors) + componentContext },
         ],
         "gpt-4o"
       );

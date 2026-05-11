@@ -8,6 +8,15 @@ export interface ValidationResult {
 export async function validate(outputRoot: string): Promise<ValidationResult> {
   console.log("\nValidating generated app...");
 
+  console.log("  Installing dependencies...");
+  const installResult = run("npm install", outputRoot);
+  if (installResult.exitCode !== 0) {
+    return {
+      passed: false,
+      errors: `[npm install]\n${installResult.stdout}\n${installResult.stderr}`.trim(),
+    };
+  }
+
   const tscResult = run("npm run typecheck", outputRoot);
   if (tscResult.exitCode !== 0) {
     console.log("  TypeScript check failed.");
