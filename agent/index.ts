@@ -28,6 +28,21 @@ function parseArgs(argv: string[]): { spec: string; output: string } {
 }
 
 // ---------------------------------------------------------------------------
+// Remove boilerplate reference files that have no place in the output app.
+// These are nested inside src/ so they can't be excluded during the copy.
+// ---------------------------------------------------------------------------
+function cleanBoilerplate(outputRoot: string): void {
+  const toDelete = [
+    "src/components/Example.tsx",
+    "src/__tests__/Example.test.tsx",
+  ];
+  for (const relPath of toDelete) {
+    const absPath = path.join(outputRoot, relPath);
+    if (fs.existsSync(absPath)) fs.rmSync(absPath);
+  }
+}
+
+// ---------------------------------------------------------------------------
 // Patch vitest.config.ts in the output directory.
 // The copied config uses __dirname which doesn't resolve reliably in ESM
 // when loaded from a subdirectory. Replace it with import.meta.dirname.
@@ -78,6 +93,7 @@ const spec = readFile(specPath);
 console.log("Copying boilerplate...");
 if (fs.existsSync(OUTPUT_ROOT)) fs.rmSync(OUTPUT_ROOT, { recursive: true });
 copyBoilerplate(BOILERPLATE_ROOT, OUTPUT_ROOT);
+cleanBoilerplate(OUTPUT_ROOT);
 patchVitestConfig(OUTPUT_ROOT);
 console.log("Boilerplate ready.\n");
 

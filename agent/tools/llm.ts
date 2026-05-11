@@ -3,8 +3,8 @@ import { fileURLToPath } from "node:url";
 import path from "node:path";
 import OpenAI from "openai";
 
-// Load agent/.env regardless of which directory the process is run from
-config({ path: path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../.env") });
+// Load .env from the project root regardless of which directory the process is run from
+config({ path: path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../../.env") });
 import type { ChatCompletionMessageParam } from "openai/resources/chat/completions";
 
 const apiKey = process.env["OPENAI_API_KEY"];
