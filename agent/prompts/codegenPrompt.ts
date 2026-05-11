@@ -39,25 +39,14 @@ Coding rules:
   Then use Mock as a type — NOT vi.Mock (vi is a value, not a namespace, so vi.Mock is invalid TypeScript).
 - Do not type anything as jest.Mock, jest.SpyInstance, or any jest.* type.
 - Responsive images: use car.mobile (≤640px), car.tablet (641–1023px), car.desktop (≥1024px) via MUI useMediaQuery.
-- For tests that involve useMediaQuery/responsive images, mock window.matchMedia using Object.defineProperty
-  in a beforeEach. Use EXACTLY this pattern — do NOT call or spread the mock function inside itself:
-  beforeEach(() => {
-    Object.defineProperty(window, 'matchMedia', {
-      writable: true,
-      value: vi.fn().mockImplementation((query: string) => ({
-        matches: false,
-        media: query,
-        onchange: null,
-        addListener: vi.fn(),
-        removeListener: vi.fn(),
-        addEventListener: vi.fn(),
-        removeEventListener: vi.fn(),
-        dispatchEvent: vi.fn(),
-      })),
-    });
-  });
-- For tests, only assert what the component visibly renders. Do NOT look for labels or elements
-  that are not explicitly rendered by the component you are testing.`;
+- Keep tests SIMPLE. Model every test file after the Example.test.tsx pattern:
+  1. Render the component inside MockedProvider with a small mocks array
+  2. Assert one or two visible text strings using screen.findByText or screen.getByText
+  3. Assert the loading state using screen.getByRole("progressbar")
+  Do NOT test sorting, filtering, form submission, or window.matchMedia in unit tests.
+  Do NOT mock window.matchMedia — it is not needed for simple render tests.
+- Only import what you actually use. If you import beforeEach, afterEach, or vi, you MUST use them.
+  If you are not using them, do not import them.`;
 
 export function buildCodegenUserPrompt(
   task: Task,

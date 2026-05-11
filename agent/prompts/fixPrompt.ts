@@ -17,8 +17,9 @@ This project uses Vitest, NOT Jest. NEVER use any jest.* references:
 Rules:
 - Return ONLY the complete fixed file contents. No explanation, no markdown fences, no commentary.
 - Fix ALL errors shown — do not leave any unresolved.
-- Do not change the overall structure or logic unless required to fix the errors.
-- Preserve all existing imports and exports unless they are causing the error.`;
+- Only import what you actually use. Remove any unused imports — TypeScript strict mode will fail on them.
+- Keep tests simple: render with MockedProvider, assert visible text, assert loading state. Do not add complexity.
+- Do not change the overall structure or logic unless required to fix the errors.`;
 
 export function buildFixUserPrompt(
   filePath: string,
